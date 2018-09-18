@@ -7,7 +7,7 @@ using namespace php;
 using namespace std;
 
 
-PHPX_FUNCTION(my_hql_echo)
+PHPX_FUNCTION(my_hql_info)
 {
     struct timeval tv;
     gettimeofday(&tv,NULL);
@@ -20,10 +20,16 @@ PHPX_FUNCTION(my_hql_echo)
     retval = arr;
 }
 
+// auto add \n on the end of line
+PHPX_FUNCTION(my_hql_echox)
+{
+    echo("%s\n", args[0].toCString());
+}
+
 
 PHPX_EXTENSION()
 {
-    Extension *extension = new Extension("my_hql", "0.0.1");
+    Extension *extension = new Extension("my_hql", "0.0.2");
 
     extension->onStart = [extension]() noexcept
     {
@@ -46,7 +52,8 @@ PHPX_EXTENSION()
 //        cout << extension->name << "afterRequest" << endl;
 //    };
 
-    extension->registerFunction(PHPX_FN(my_hql_echo));
+    extension->registerFunction(PHPX_FN(my_hql_info));
+    extension->registerFunction(PHPX_FN(my_hql_echox));
 
     extension->info(
     {
