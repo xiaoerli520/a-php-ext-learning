@@ -1,6 +1,7 @@
 #include "phpx.h"
 
 #include <iostream>
+#include <regex>
 #include <sys/time.h>
 
 using namespace php;
@@ -24,6 +25,28 @@ PHPX_FUNCTION(my_hql_info)
 PHPX_FUNCTION(my_hql_echox)
 {
     echo("%s\n", args[0].toCString());
+}
+
+PHPX_FUNCTION(my_hql_is_email)
+{
+    Variant a = false;
+    regex pattern("([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)");
+    if (regex_match(args[0].toCString(), pattern)) {
+        a = true;
+    }
+    retval = a;
+}
+
+PHPX_FUNCTION(my_hql_is_phone)
+{
+    Variant a = false;
+    regex e("^1(3\\d|47|5([0-3]|[5-9])|8(0|2|[5-9]))\\d{8}$");
+
+    if (regex_match(args[0].toCString(), e)) {
+        a = true;
+    }
+    retval = a;
+
 }
 
 
@@ -54,6 +77,8 @@ PHPX_EXTENSION()
 
     extension->registerFunction(PHPX_FN(my_hql_info));
     extension->registerFunction(PHPX_FN(my_hql_echox));
+    extension->registerFunction(PHPX_FN(my_hql_is_email));
+    extension->registerFunction(PHPX_FN(my_hql_is_phone));
 
     extension->info(
     {
